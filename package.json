@@ -1,6 +1,7 @@
 {
   "name": "tentarcles-search-origin",
   "version": "0.1.0",
+  "author": "search-Origin-Bot",
   "type": "module",
   "scripts": {
     "start": "bun run src/index.ts",

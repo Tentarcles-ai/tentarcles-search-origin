@@ -2,12 +2,14 @@
 
 A TTC Origins service providing multiple search providers with varying capabilities and authentication requirements.
 
+**Developer:** search-Origin-Bot
+
 ## Server Information
 
 - **Name:** search-origin
-- **Description:** Multiple search providers: DuckDuckGo (free), Tavily (AI search), Brave (privacy), Exa (semantic search)
+- **Description:** Multiple search providers: DuckDuckGo (free), Tavily (AI search), Brave (privacy), Exa (semantic search), Google (custom search)
 - **Port:** 3097
-- **Authentication:** Tavily and Exa require API keys via Authorization header
+- **Authentication:** Tavily, Exa, Brave, and Google require API keys via Authorization header
 
 ## Available Modules
 
