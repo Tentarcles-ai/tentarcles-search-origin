@@ -1,8 +1,30 @@
-import { ttc } from 'ttc-origin-server';
+import { getAuthKey, ttc } from 'ttc-origin-server';
 import { z } from 'zod';
 import { tavily as TavilyClient } from '@tavily/core';
 
+/**
+ * Tavily Search Module
+ * 
+ * Provides AI-powered search functionality using Tavily's API.
+ * Requires API key in Authorization header for authentication.
+ * Offers advanced features like AI-generated answers, image search,
+ * and raw content extraction.
+ * 
+ * @class TavilySearch
+ */
 export class TavilySearch {
+  /**
+   * Search using Tavily AI Search API
+   * 
+   * @param query - The search query string
+   * @param numResults - Number of results to return (1-10, default: 5)
+   * @param includeAnswer - Include AI-generated answer (default: false)
+   * @param includeImages - Include image URLs in results (default: false)
+   * @param includeRawContent - Include raw content text (default: false)
+   * @returns Object containing success status, search results, and optional AI answer/images
+   * @example
+   * await tavily.search("AI news", 5, true, false, false);
+   */
   @ttc.describe({
     doc: 'Search using Tavily AI Search API via official @tavily/core package',
     inputSchema: z.object({
@@ -27,7 +49,7 @@ export class TavilySearch {
     })
   })
   async search(
-    query: string, 
+    query: string,
     numResults: number = 5,
     includeAnswer: boolean = false,
     includeImages: boolean = false,
@@ -41,9 +63,11 @@ export class TavilySearch {
   }> {
     try {
       // Get API key from request headers
-      const context = ttc.requestContext(arguments);
-      const apiKey = context.request.headers['authorization'];
-      
+      const apiKey = getAuthKey(arguments, {
+        provider: 'tavily',
+        credentialKey: 'apiKey'
+      })
+
       if (!apiKey) {
         return {
           success: false,
@@ -54,7 +78,7 @@ export class TavilySearch {
 
       // Initialize Tavily client with API key
       const tavily = TavilyClient({ apiKey });
-      
+
       // Perform search using official client
       const searchResult = await tavily.search(query, {
         maxResults: numResults,
@@ -93,6 +117,13 @@ export class TavilySearch {
     }
   }
 
+  /**
+   * Get Tavily API usage and limits
+   * 
+   * @returns Object containing success status and usage information
+   * @example
+   * await tavily.getUsage();
+   */
   @ttc.describe({
     doc: 'Get Tavily API usage and limits',
     inputSchema: z.object({}),
@@ -112,9 +143,11 @@ export class TavilySearch {
     error?: string;
   }> {
     try {
-      const context = ttc.requestContext(arguments);
-      const apiKey = context.request.headers['authorization'];
-      
+      const apiKey = getAuthKey(arguments, {
+        provider: 'tavily',
+        credentialKey: 'apiKey'
+      })
+
       if (!apiKey) {
         return {
           success: false,

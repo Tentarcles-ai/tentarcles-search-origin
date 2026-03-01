@@ -1,8 +1,29 @@
-import { ttc } from 'ttc-origin-server';
+import { getAuthKey, ttc } from 'ttc-origin-server';
 import { z } from 'zod';
 import Exa from 'exa-js';
 
+/**
+ * Exa AI Search Module
+ * 
+ * Provides semantic search functionality using Exa AI's API.
+ * Requires API key in Authorization header for authentication.
+ * Offers neural search, keyword search, find similar pages,
+ * and AI-generated answers with citations.
+ * 
+ * @class ExaSearch
+ */
 export class ExaSearch {
+  /**
+   * Search the web using Exa AI
+   * 
+   * @param query - The search query string
+   * @param numResults - Number of results to return (1-20, default: 5)
+   * @param includeText - Include text content in results (default: true)
+   * @param type - Search type: 'neural', 'keyword', 'auto' (default: 'auto')
+   * @returns Object containing success status and search results
+   * @example
+   * await exa.search("machine learning", 5, true, "neural");
+   */
   @ttc.describe({
     doc: 'Search the web using Exa AI',
     inputSchema: z.object({
@@ -29,8 +50,10 @@ export class ExaSearch {
     type: 'neural' | 'keyword' | 'auto' = 'auto'
   ) {
     try {
-      const context = ttc.requestContext(arguments);
-      const apiKey = context.request.headers['authorization'];
+      const apiKey = getAuthKey(arguments, {
+        provider: 'Exa',
+        credentialKey: 'apiKey'
+      })
       
       if (!apiKey) {
         return {
@@ -79,6 +102,16 @@ export class ExaSearch {
     }
   }
 
+  /**
+   * Find similar pages to a URL using Exa AI
+   * 
+   * @param url - Source URL to find similar pages for
+   * @param numResults - Number of results to return (1-20, default: 5)
+   * @param includeText - Include text content in results (default: true)
+   * @returns Object containing success status and similar page results
+   * @example
+   * await exa.findSimilar("https://example.com/article", 5, true);
+   */
   @ttc.describe({
     doc: 'Find similar pages to a URL using Exa AI',
     inputSchema: z.object({
@@ -103,8 +136,10 @@ export class ExaSearch {
     includeText: boolean = true
   ) {
     try {
-      const context = ttc.requestContext(arguments);
-      const apiKey = context.request.headers['authorization'];
+      const apiKey = getAuthKey(arguments, {
+        provider: 'Exa',
+        credentialKey: 'apiKey'
+      })
       
       if (!apiKey) {
         return {
@@ -149,6 +184,15 @@ export class ExaSearch {
     }
   }
 
+  /**
+   * Get answer with citations using Exa AI
+   * 
+   * @param question - Question to get an answer for
+   * @param includeText - Include text content in citations (default: true)
+   * @returns Object containing success status, AI answer, and citations
+   * @example
+   * await exa.answer("What is quantum computing?", true);
+   */
   @ttc.describe({
     doc: 'Get answer with citations using Exa AI',
     inputSchema: z.object({
@@ -171,8 +215,10 @@ export class ExaSearch {
     includeText: boolean = true
   ) {
     try {
-      const context = ttc.requestContext(arguments);
-      const apiKey = context.request.headers['authorization'];
+      const apiKey = getAuthKey(arguments, {
+        provider: 'Exa',
+        credentialKey: 'apiKey'
+      })
       
       if (!apiKey) {
         return {

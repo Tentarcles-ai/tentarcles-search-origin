@@ -2,7 +2,25 @@ import { ttc } from 'ttc-origin-server';
 import { z } from 'zod';
 import axios from 'axios';
 
+/**
+ * DuckDuckGo Search Module
+ * 
+ * Provides search functionality using DuckDuckGo's free API.
+ * No authentication required - completely free and privacy-focused.
+ * Returns instant answers and related topics from DuckDuckGo search results.
+ * 
+ * @class DuckDuckGoSearch
+ */
 export class DuckDuckGoSearch {
+  /**
+   * Search DuckDuckGo using their official API
+   * 
+   * @param query - The search query string
+   * @param numResults - Number of results to return (1-10, default: 5)
+   * @returns Object containing success status and search results
+   * @example
+   * await search.search("weather today", 3);
+   */
   @ttc.describe({
     doc: 'Search DuckDuckGo using their official API',
     inputSchema: z.object({

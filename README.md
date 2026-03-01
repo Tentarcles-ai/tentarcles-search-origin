@@ -1,6 +1,38 @@
-# GoogleSearch
+# Search Origin Server
 
-A TTC Origins service created with the create-ttc-app generator.
+A TTC Origins service providing multiple search providers with varying capabilities and authentication requirements.
+
+## Server Information
+
+- **Name:** search-origin
+- **Description:** Multiple search providers: DuckDuckGo (free), Tavily (AI search), Brave (privacy), Exa (semantic search)
+- **Port:** 3097
+- **Authentication:** Tavily and Exa require API keys via Authorization header
+
+## Available Modules
+
+### 1. DuckDuckGoSearch
+- **Authentication:** None required (free)
+- **Functions:**
+  - `search(query, numResults)` - Search DuckDuckGo
+
+### 2. TavilySearch
+- **Authentication:** API key required
+- **Functions:**
+  - `search(query, numResults, includeAnswer, includeImages, includeRawContent)` - AI-powered search
+  - `getUsage()` - Check API usage
+
+### 3. BraveSearch
+- **Authentication:** API key required
+- **Functions:**
+  - `search(query, numResults, country, searchLang, safeSearch, freshness)` - Privacy-focused search
+
+### 4. ExaSearch
+- **Authentication:** API key required
+- **Functions:**
+  - `search(query, numResults, includeText, type)` - Semantic search
+  - `findSimilar(url, numResults, includeText)` - Find similar pages
+  - `answer(question, includeText)` - Get AI answers with citations
 
 ## Getting Started
 
@@ -21,25 +53,5 @@ A TTC Origins service created with the create-ttc-app generator.
 
 ## Project Structure
 
-- `src/index.ts` - Main server entry point (imports runServer from ttc-origin-server)
-- `src/modules/` - Your service modules with @ttc.describe decorators
-
-## Creating Modules
-
-Create new modules in `src/modules/` using the `@ttc.describe` decorator from `ttc-rpc`.
-
-Example:
-```typescript
-import { ttc } from 'ttc-rpc';
-
-export class MyModule {
-  @ttc.describe({
-    description: 'My method description',
-    input: ttc.z.object({}),
-    output: ttc.z.string()
-  })
-  myMethod() {
-    return 'Hello';
-  }
-}
-```
+- `src/index.ts` - Main server entry point
+- `src/modules/` - Search provider modules with @ttc.describe decorators

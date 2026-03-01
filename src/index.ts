@@ -9,7 +9,20 @@ runServer({
   description: 'Multiple search providers: DuckDuckGo (free), Tavily (AI search), Brave (privacy), Exa (semantic search)',
   modules: [DuckDuckGoSearch, TavilySearch, BraveSearch, ExaSearch],
   port: 3097,
-  modulesRequiringAuth: [TavilySearch, BraveSearch, ExaSearch],
+  credentials: [
+    {
+      provider: 'tavily',
+      credentialKeys: [ 'apiKey' ]
+    },
+    {
+      provider: 'Exa',
+      credentialKeys: ['apiKey']
+    },
+    {
+      provider: 'brave',
+      credentialKeys: ['apiKey']
+    }
+  ],
   modifyable: false,
   authCb: async (req) => {
     // Allow all requests; API keys are in headers

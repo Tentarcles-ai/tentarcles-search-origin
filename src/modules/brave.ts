@@ -1,10 +1,33 @@
-import { ttc } from 'ttc-origin-server';
+import { getAuthKey, ttc } from 'ttc-origin-server';
 import { z } from 'zod';
 import axios from 'axios';
 
+/**
+ * Brave Search Module
+ * 
+ * Provides search functionality using Brave Search API.
+ * Requires API key in Authorization header for authentication.
+ * Offers privacy-focused search with configurable safe search,
+ * country/language targeting, and freshness filtering.
+ * 
+ * @class BraveSearch
+ */
 export class BraveSearch {
   private baseUrl: string = 'https://api.search.brave.com/res/v1';
 
+  /**
+   * Search using Brave Search API
+   * 
+   * @param query - The search query string
+   * @param numResults - Number of results to return (1-20, default: 10)
+   * @param country - Country code for search results (default: 'us')
+   * @param searchLang - Search language (default: 'en')
+   * @param safeSearch - Safe search level: 'off', 'moderate', 'strict' (default: 'moderate')
+   * @param freshness - Time filter: 'pd' (past day), 'pw', 'pm', 'py'
+   * @returns Object containing success status and search results
+   * @example
+   * await brave.search("latest tech", 10, "us", "en", "moderate", "pd");
+   */
   @ttc.describe({
     doc: 'Search using Brave Search API',
     inputSchema: z.object({
@@ -49,8 +72,10 @@ export class BraveSearch {
   }> {
     try {
       // Get API key from request headers
-      const context = ttc.requestContext(arguments);
-      const apiKey = context.request.headers['authorization'];
+      const apiKey = getAuthKey(arguments, {
+        provider: 'brave',
+        credentialKey: 'apiKey'
+      })
       
       if (!apiKey) {
         return {
