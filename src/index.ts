@@ -5,6 +5,7 @@ import { BraveSearch } from './modules/brave';
 import { ExaSearch } from './modules/exa';
 import { GoogleSearch } from './modules/google';
 
+
 runServer({
   name: 'search-origin',
   description: 'Multiple search providers: DuckDuckGo (free), Tavily (AI search), Brave (privacy), Exa (semantic search)',

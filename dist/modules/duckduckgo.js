@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,9 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { ttc } from 'ttc-origin-server';
-import { z } from 'zod';
-import axios from 'axios';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DuckDuckGoSearch = void 0;
+const ttc_origin_server_1 = require("ttc-origin-server");
+const zod_1 = require("zod");
+const axios_1 = __importDefault(require("axios"));
 /**
  * DuckDuckGo Search Module
  *
@@ -19,7 +25,7 @@ import axios from 'axios';
  *
  * @class DuckDuckGoSearch
  */
-export class DuckDuckGoSearch {
+class DuckDuckGoSearch {
     /**
      * Search DuckDuckGo using their official API
      *
@@ -40,7 +46,7 @@ export class DuckDuckGoSearch {
                 no_redirect: 1,
                 skip_disambig: 1
             };
-            const response = await axios.get(url, { params });
+            const response = await axios_1.default.get(url, { params });
             const data = response.data;
             // console.log('DuckDuckGo API response:', JSON.stringify(data, null, 2));
             // DuckDuckGo returns AbstractText and RelatedTopics
@@ -81,21 +87,22 @@ export class DuckDuckGoSearch {
         }
     }
 }
+exports.DuckDuckGoSearch = DuckDuckGoSearch;
 __decorate([
-    ttc.describe({
+    ttc_origin_server_1.ttc.describe({
         doc: 'Search DuckDuckGo using their official API',
-        inputSchema: z.object({
-            query: z.string(),
-            numResults: z.number().min(1).max(10).optional().default(5)
+        inputSchema: zod_1.z.object({
+            query: zod_1.z.string(),
+            numResults: zod_1.z.number().min(1).max(10).optional().default(5)
         }),
-        outputSchema: z.object({
-            success: z.boolean(),
-            results: z.array(z.object({
-                title: z.string(),
-                link: z.string(),
-                snippet: z.string().optional()
+        outputSchema: zod_1.z.object({
+            success: zod_1.z.boolean(),
+            results: zod_1.z.array(zod_1.z.object({
+                title: zod_1.z.string(),
+                link: zod_1.z.string(),
+                snippet: zod_1.z.string().optional()
             })),
-            error: z.string().optional()
+            error: zod_1.z.string().optional()
         })
     }),
     __metadata("design:type", Function),

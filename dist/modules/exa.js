@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,9 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { getAuthKey, ttc } from 'ttc-origin-server';
-import { z } from 'zod';
-import Exa from 'exa-js';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExaSearch = void 0;
+const ttc_origin_server_1 = require("ttc-origin-server");
+const zod_1 = require("zod");
+const exa_js_1 = __importDefault(require("exa-js"));
 /**
  * Exa AI Search Module
  *
@@ -20,7 +26,7 @@ import Exa from 'exa-js';
  *
  * @class ExaSearch
  */
-export class ExaSearch {
+class ExaSearch {
     /**
      * Search the web using Exa AI
      *
@@ -34,7 +40,7 @@ export class ExaSearch {
      */
     async search(query, numResults = 5, includeText = true, type = 'auto') {
         try {
-            const apiKey = getAuthKey(arguments, {
+            const apiKey = (0, ttc_origin_server_1.getAuthKey)(arguments, {
                 provider: 'Exa',
                 credentialKey: 'apiKey'
             });
@@ -45,7 +51,7 @@ export class ExaSearch {
                     error: 'Exa API key required in Authorization header'
                 };
             }
-            const exa = new Exa(apiKey);
+            const exa = new exa_js_1.default(apiKey);
             let result;
             if (includeText) {
                 result = await exa.search(query, {
@@ -93,7 +99,7 @@ export class ExaSearch {
      */
     async findSimilar(url, numResults = 5, includeText = true) {
         try {
-            const apiKey = getAuthKey(arguments, {
+            const apiKey = (0, ttc_origin_server_1.getAuthKey)(arguments, {
                 provider: 'Exa',
                 credentialKey: 'apiKey'
             });
@@ -104,7 +110,7 @@ export class ExaSearch {
                     error: 'Exa API key required'
                 };
             }
-            const exa = new Exa(apiKey);
+            const exa = new exa_js_1.default(apiKey);
             let result;
             if (includeText) {
                 result = await exa.findSimilar(url, {
@@ -148,7 +154,7 @@ export class ExaSearch {
      */
     async answer(question, includeText = true) {
         try {
-            const apiKey = getAuthKey(arguments, {
+            const apiKey = (0, ttc_origin_server_1.getAuthKey)(arguments, {
                 provider: 'Exa',
                 credentialKey: 'apiKey'
             });
@@ -158,7 +164,7 @@ export class ExaSearch {
                     error: 'Exa API key required'
                 };
             }
-            const exa = new Exa(apiKey);
+            const exa = new exa_js_1.default(apiKey);
             const result = await exa.answer(question, {
                 text: includeText
             });
@@ -180,24 +186,25 @@ export class ExaSearch {
         }
     }
 }
+exports.ExaSearch = ExaSearch;
 __decorate([
-    ttc.describe({
+    ttc_origin_server_1.ttc.describe({
         doc: 'Search the web using Exa AI',
-        inputSchema: z.object({
-            query: z.string(),
-            numResults: z.number().min(1).max(20).optional().default(5),
-            includeText: z.boolean().optional().default(true),
-            type: z.enum(['neural', 'keyword', 'auto']).optional().default('auto')
+        inputSchema: zod_1.z.object({
+            query: zod_1.z.string(),
+            numResults: zod_1.z.number().min(1).max(20).optional().default(5),
+            includeText: zod_1.z.boolean().optional().default(true),
+            type: zod_1.z.enum(['neural', 'keyword', 'auto']).optional().default('auto')
         }),
-        outputSchema: z.object({
-            success: z.boolean(),
-            results: z.array(z.object({
-                title: z.string(),
-                url: z.string(),
-                text: z.string().optional(),
-                score: z.number().optional()
+        outputSchema: zod_1.z.object({
+            success: zod_1.z.boolean(),
+            results: zod_1.z.array(zod_1.z.object({
+                title: zod_1.z.string(),
+                url: zod_1.z.string(),
+                text: zod_1.z.string().optional(),
+                score: zod_1.z.number().optional()
             })),
-            error: z.string().optional()
+            error: zod_1.z.string().optional()
         })
     }),
     __metadata("design:type", Function),
@@ -205,22 +212,22 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ExaSearch.prototype, "search", null);
 __decorate([
-    ttc.describe({
+    ttc_origin_server_1.ttc.describe({
         doc: 'Find similar pages to a URL using Exa AI',
-        inputSchema: z.object({
-            url: z.string().url(),
-            numResults: z.number().min(1).max(20).optional().default(5),
-            includeText: z.boolean().optional().default(true)
+        inputSchema: zod_1.z.object({
+            url: zod_1.z.string().url(),
+            numResults: zod_1.z.number().min(1).max(20).optional().default(5),
+            includeText: zod_1.z.boolean().optional().default(true)
         }),
-        outputSchema: z.object({
-            success: z.boolean(),
-            results: z.array(z.object({
-                title: z.string(),
-                url: z.string(),
-                text: z.string().optional(),
-                score: z.number().optional()
+        outputSchema: zod_1.z.object({
+            success: zod_1.z.boolean(),
+            results: zod_1.z.array(zod_1.z.object({
+                title: zod_1.z.string(),
+                url: zod_1.z.string(),
+                text: zod_1.z.string().optional(),
+                score: zod_1.z.number().optional()
             })),
-            error: z.string().optional()
+            error: zod_1.z.string().optional()
         })
     }),
     __metadata("design:type", Function),
@@ -228,21 +235,21 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ExaSearch.prototype, "findSimilar", null);
 __decorate([
-    ttc.describe({
+    ttc_origin_server_1.ttc.describe({
         doc: 'Get answer with citations using Exa AI',
-        inputSchema: z.object({
-            question: z.string(),
-            includeText: z.boolean().optional().default(true)
+        inputSchema: zod_1.z.object({
+            question: zod_1.z.string(),
+            includeText: zod_1.z.boolean().optional().default(true)
         }),
-        outputSchema: z.object({
-            success: z.boolean(),
-            answer: z.string().optional(),
-            citations: z.array(z.object({
-                title: z.string(),
-                url: z.string(),
-                text: z.string().optional()
+        outputSchema: zod_1.z.object({
+            success: zod_1.z.boolean(),
+            answer: zod_1.z.string().optional(),
+            citations: zod_1.z.array(zod_1.z.object({
+                title: zod_1.z.string(),
+                url: zod_1.z.string(),
+                text: zod_1.z.string().optional()
             })).optional(),
-            error: z.string().optional()
+            error: zod_1.z.string().optional()
         })
     }),
     __metadata("design:type", Function),

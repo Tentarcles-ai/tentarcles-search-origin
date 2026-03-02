@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,9 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { getAuthKey, ttc } from 'ttc-origin-server';
-import { z } from 'zod';
-import { tavily as TavilyClient } from '@tavily/core';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TavilySearch = void 0;
+const ttc_origin_server_1 = require("ttc-origin-server");
+const zod_1 = require("zod");
+const core_1 = require("@tavily/core");
 /**
  * Tavily Search Module
  *
@@ -20,7 +23,7 @@ import { tavily as TavilyClient } from '@tavily/core';
  *
  * @class TavilySearch
  */
-export class TavilySearch {
+class TavilySearch {
     /**
      * Search using Tavily AI Search API
      *
@@ -36,7 +39,7 @@ export class TavilySearch {
     async search(query, numResults = 5, includeAnswer = false, includeImages = false, includeRawContent = false) {
         try {
             // Get API key from request headers
-            const apiKey = getAuthKey(arguments, {
+            const apiKey = (0, ttc_origin_server_1.getAuthKey)(arguments, {
                 provider: 'tavily',
                 credentialKey: 'apiKey'
             });
@@ -48,7 +51,7 @@ export class TavilySearch {
                 };
             }
             // Initialize Tavily client with API key
-            const tavily = TavilyClient({ apiKey });
+            const tavily = (0, core_1.tavily)({ apiKey });
             // Perform search using official client
             const searchResult = await tavily.search(query, {
                 maxResults: numResults,
@@ -93,7 +96,7 @@ export class TavilySearch {
      */
     async getUsage() {
         try {
-            const apiKey = getAuthKey(arguments, {
+            const apiKey = (0, ttc_origin_server_1.getAuthKey)(arguments, {
                 provider: 'tavily',
                 credentialKey: 'apiKey'
             });
@@ -123,28 +126,29 @@ export class TavilySearch {
         }
     }
 }
+exports.TavilySearch = TavilySearch;
 __decorate([
-    ttc.describe({
+    ttc_origin_server_1.ttc.describe({
         doc: 'Search using Tavily AI Search API via official @tavily/core package',
-        inputSchema: z.object({
-            query: z.string(),
-            numResults: z.number().min(1).max(10).optional().default(5),
-            includeAnswer: z.boolean().optional().default(false),
-            includeImages: z.boolean().optional().default(false),
-            includeRawContent: z.boolean().optional().default(false)
+        inputSchema: zod_1.z.object({
+            query: zod_1.z.string(),
+            numResults: zod_1.z.number().min(1).max(10).optional().default(5),
+            includeAnswer: zod_1.z.boolean().optional().default(false),
+            includeImages: zod_1.z.boolean().optional().default(false),
+            includeRawContent: zod_1.z.boolean().optional().default(false)
         }),
-        outputSchema: z.object({
-            success: z.boolean(),
-            results: z.array(z.object({
-                title: z.string(),
-                url: z.string(),
-                content: z.string().optional(),
-                score: z.number().optional(),
-                publishedDate: z.string().optional()
+        outputSchema: zod_1.z.object({
+            success: zod_1.z.boolean(),
+            results: zod_1.z.array(zod_1.z.object({
+                title: zod_1.z.string(),
+                url: zod_1.z.string(),
+                content: zod_1.z.string().optional(),
+                score: zod_1.z.number().optional(),
+                publishedDate: zod_1.z.string().optional()
             })),
-            answer: z.string().optional(),
-            images: z.array(z.string()).optional(),
-            error: z.string().optional()
+            answer: zod_1.z.string().optional(),
+            images: zod_1.z.array(zod_1.z.string()).optional(),
+            error: zod_1.z.string().optional()
         })
     }),
     __metadata("design:type", Function),
@@ -152,17 +156,17 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TavilySearch.prototype, "search", null);
 __decorate([
-    ttc.describe({
+    ttc_origin_server_1.ttc.describe({
         doc: 'Get Tavily API usage and limits',
-        inputSchema: z.object({}),
-        outputSchema: z.object({
-            success: z.boolean(),
-            usage: z.object({
-                monthlyLimit: z.number().optional(),
-                used: z.number().optional(),
-                remaining: z.number().optional()
+        inputSchema: zod_1.z.object({}),
+        outputSchema: zod_1.z.object({
+            success: zod_1.z.boolean(),
+            usage: zod_1.z.object({
+                monthlyLimit: zod_1.z.number().optional(),
+                used: zod_1.z.number().optional(),
+                remaining: zod_1.z.number().optional()
             }).optional(),
-            error: z.string().optional()
+            error: zod_1.z.string().optional()
         })
     }),
     __metadata("design:type", Function),

@@ -1,13 +1,15 @@
-import { runServer } from 'ttc-origin-server';
-import { DuckDuckGoSearch } from './modules/duckduckgo';
-import { TavilySearch } from './modules/tavily';
-import { BraveSearch } from './modules/brave';
-import { ExaSearch } from './modules/exa';
-import { GoogleSearch } from './modules/google';
-runServer({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const ttc_origin_server_1 = require("ttc-origin-server");
+const duckduckgo_1 = require("./modules/duckduckgo");
+const tavily_1 = require("./modules/tavily");
+const brave_1 = require("./modules/brave");
+const exa_1 = require("./modules/exa");
+const google_1 = require("./modules/google");
+(0, ttc_origin_server_1.runServer)({
     name: 'search-origin',
     description: 'Multiple search providers: DuckDuckGo (free), Tavily (AI search), Brave (privacy), Exa (semantic search)',
-    modules: [DuckDuckGoSearch, TavilySearch, BraveSearch, ExaSearch, GoogleSearch],
+    modules: [duckduckgo_1.DuckDuckGoSearch, tavily_1.TavilySearch, brave_1.BraveSearch, exa_1.ExaSearch, google_1.GoogleSearch],
     port: 3097,
     credentials: [
         {
