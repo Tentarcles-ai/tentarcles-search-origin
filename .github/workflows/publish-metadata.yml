@@ -1,0 +1,66 @@
+name: Publish Package Metadata
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+jobs:
+  publish-metadata:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Extract package metadata
+      id: extract
+      run: |
+        # Read package.json and extract relevant fields
+        NAME=$(jq -r '.name' package.json)
+        VERSION=$(jq -r '.version' package.json)
+        DESCRIPTION=$(jq -r '.description // ""' package.json)
+        AUTHOR=$(jq -r '.author // ""' package.json)
+        TYPE=$(jq -r '.type // "commonjs"' package.json)
+        KEYWORDS=$(jq -r '.keywords // []' package.json)
+        BIN=$(jq -r '.bin // {}' package.json)
+        
+        # Create JSON payload with additional fields
+        PAYLOAD=$(jq -n \
+          --arg name "$NAME" \
+          --arg version "$VERSION" \
+          --arg description "$DESCRIPTION" \
+          --arg author "$AUTHOR" \
+          --argjson keywords "$KEYWORDS" \
+          --argjson bin "$BIN" \
+          --arg repo "$GITHUB_REPOSITORY" \
+          --arg commit "$GITHUB_SHA" \
+          '{name: $name, version: $version, description: $description, author: $author, keywords: $keywords, bin: $bin, repository: $repo, commit: $commit}'
+        )
+        
+        # Output for debugging
+        echo "Extracted metadata:"
+        echo "$PAYLOAD" | jq .
+        
+        # Set output for next steps
+        echo "payload=$PAYLOAD" >> $GITHUB_OUTPUT
+        
+    - name: Publish to endpoint
+      env:
+        ENDPOINT_URL: "https://api.tentarclesai.com/origins"
+        ENDPOINT_TOKEN: ${{ secrets.METADATA_ENDPOINT_TOKEN }}
+      run: |
+        if [ -n "$ENDPOINT_URL" ]; then
+          echo "Publishing metadata to endpoint..."
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $ENDPOINT_TOKEN" \
+            -d "${{ steps.extract.outputs.payload }}" \
+            "$ENDPOINT_URL"
+          echo "Metadata published successfully"
+        else
+          echo "No endpoint URL configured. Set METADATA_ENDPOINT_URL secret."
+          echo "Payload would be:"
+          echo "${{ steps.extract.outputs.payload }}" | jq .
+        fi
