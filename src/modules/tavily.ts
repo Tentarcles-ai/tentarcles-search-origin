@@ -67,7 +67,6 @@ export class TavilySearch {
         provider: 'tavily',
         credentialKey: 'apiKey'
       })
-      console.log(apiKey, 'tavily')
 
       if (!apiKey) {
         return {
